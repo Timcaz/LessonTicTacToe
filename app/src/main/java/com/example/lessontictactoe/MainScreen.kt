@@ -29,9 +29,10 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
+import kotlinx.coroutines.delay
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier, dim: Int) {
+fun MainScreen(modifier: Modifier = Modifier, dim: Int, timerDuration: Int) {
     var scoreX by remember { mutableStateOf(0) }
     var scoreO by remember { mutableStateOf(0) }
 
@@ -53,7 +54,7 @@ fun MainScreen(modifier: Modifier = Modifier, dim: Int) {
             Text(text = "Рахунок O: $scoreO", style = MaterialTheme.typography.bodyLarge)
         }
         Spacer(modifier = Modifier.height(8.dp))
-        GameBoard(dim = dim, onGameEnd = { winner ->
+        GameBoard(dim = dim, timerDuration = timerDuration, onGameEnd = { winner ->
             if (winner == "X") scoreX++
             if (winner == "0") scoreO++
         })
@@ -61,12 +62,28 @@ fun MainScreen(modifier: Modifier = Modifier, dim: Int) {
 }
 
 @Composable
-fun GameBoard(dim: Int, onGameEnd: (String?) -> Unit)
+fun GameBoard(dim: Int, timerDuration: Int, onGameEnd: (String?) -> Unit)
 {
     val field = remember { mutableStateListOf(*Array(dim * dim) { "_" }) }
     var currentPlayer by remember { mutableStateOf("X") }
     var winner by remember { mutableStateOf<String?>(null) }
     var isDraw by remember { mutableStateOf(false) }
+    var remainingTime by remember { mutableStateOf(timerDuration) }
+    var timerKey by remember { mutableStateOf(0) }
+
+    LaunchedEffect(currentPlayer, timerKey, winner, isDraw) {
+        if (winner == null && !isDraw) {
+            remainingTime = timerDuration
+            while (remainingTime > 0) {
+                delay(1000)
+                remainingTime--
+            }
+            if (remainingTime == 0 && winner == null && !isDraw) {
+                currentPlayer = if (currentPlayer == "X") "0" else "X"
+                timerKey++
+            }
+        }
+    }
 
     fun resetGame() {
         field.clear()
@@ -74,9 +91,20 @@ fun GameBoard(dim: Int, onGameEnd: (String?) -> Unit)
         winner = null
         isDraw = false
         currentPlayer = "X"
+        timerKey++ 
     }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            text = "Хід гравця: $currentPlayer",
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        Text(
+            text = "Час: $remainingTime сек",
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
         for (row in 0 until dim)
         {
             Row {
@@ -100,6 +128,7 @@ fun GameBoard(dim: Int, onGameEnd: (String?) -> Unit)
                                         onGameEnd(null)
                                     } else {
                                         currentPlayer = if (currentPlayer == "X") "0" else "X"
+                                        timerKey++
                                     }
                                 }
                             },
@@ -166,6 +195,6 @@ fun checkWinner(field: List<String>, dim: Int): String? {
 fun MainScreenPreview()
 {
     LessonTicTacToeTheme {
-        MainScreen(dim = 3)
+        MainScreen(dim = 3, timerDuration = 10)
     }
 }
