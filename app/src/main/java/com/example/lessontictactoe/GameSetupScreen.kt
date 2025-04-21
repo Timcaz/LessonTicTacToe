@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun GameSetupScreen(onSelectionComplete: (Int, Int) -> Unit) {
+fun GameSetupScreen(onSelectionComplete: (Int, Int) -> Unit, isDarkTheme: Boolean, onThemeChanged: (Boolean) -> Unit) {
     val sizes = listOf(3, 4, 5)
     var timerDuration by remember { mutableStateOf(10) }
 
@@ -40,6 +40,15 @@ fun GameSetupScreen(onSelectionComplete: (Int, Int) -> Unit) {
                 .padding(bottom = 24.dp),
             textAlign = TextAlign.Center
         )
+        Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+            OutlinedButton(
+                onClick = { onThemeChanged(!isDarkTheme) },
+                modifier = Modifier.padding(horizontal = 8.dp)
+            ) {
+                Text(if (isDarkTheme) "Світла тема" else "Темна тема")
+            }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
             sizes.forEach { size ->
                 OutlinedButton(
