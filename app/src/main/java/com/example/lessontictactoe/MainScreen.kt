@@ -32,7 +32,7 @@ import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.delay
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier, dim: Int, timerDuration: Int) {
+fun MainScreen(modifier: Modifier = Modifier, dim: Int, timerDuration: Int, onNewGameRequested: () -> Unit) {
     var scoreX by remember { mutableStateOf(0) }
     var scoreO by remember { mutableStateOf(0) }
 
@@ -57,12 +57,12 @@ fun MainScreen(modifier: Modifier = Modifier, dim: Int, timerDuration: Int) {
         GameBoard(dim = dim, timerDuration = timerDuration, onGameEnd = { winner ->
             if (winner == "X") scoreX++
             if (winner == "0") scoreO++
-        })
+        }, onNewGameRequested = onNewGameRequested)
     }
 }
 
 @Composable
-fun GameBoard(dim: Int, timerDuration: Int, onGameEnd: (String?) -> Unit)
+fun GameBoard(dim: Int, timerDuration: Int, onGameEnd: (String?) -> Unit, onNewGameRequested: () -> Unit)
 {
     val field = remember { mutableStateListOf(*Array(dim * dim) { "_" }) }
     var currentPlayer by remember { mutableStateOf("X") }
@@ -159,8 +159,13 @@ fun GameBoard(dim: Int, timerDuration: Int, onGameEnd: (String?) -> Unit)
         }
 
         if (winner != null || isDraw) {
-            OutlinedButton(onClick = { resetGame() }, modifier = Modifier.padding(top = 8.dp)) {
-                Text("Грати ще")
+            Row(modifier = Modifier.padding(top = 8.dp)) {
+                OutlinedButton(onClick = { resetGame() }, modifier = Modifier.padding(end = 8.dp)) {
+                    Text("Скинути раунд")
+                }
+                OutlinedButton(onClick = onNewGameRequested) {
+                    Text("Нова гра")
+                }
             }
         }
     }
@@ -195,6 +200,6 @@ fun checkWinner(field: List<String>, dim: Int): String? {
 fun MainScreenPreview()
 {
     LessonTicTacToeTheme {
-        MainScreen(dim = 3, timerDuration = 10)
+        MainScreen(dim = 3, timerDuration = 10, onNewGameRequested = {})
     }
 }

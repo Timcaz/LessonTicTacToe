@@ -31,7 +31,11 @@ class MainActivity : ComponentActivity() {
                         MainScreen(
                             modifier = Modifier.padding(innerPadding),
                             dim = selectedSize!!,
-                            timerDuration = selectedTimerDuration!!
+                            timerDuration = selectedTimerDuration!!,
+                            onNewGameRequested = {
+                                selectedSize = null
+                                selectedTimerDuration = null
+                            }
                         )
                     }
                 }
