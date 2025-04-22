@@ -29,9 +29,14 @@ fun GameSetupScreen(onSelectionComplete: (Int, Int) -> Unit, isDarkTheme: Boolea
         modifier = Modifier
             .fillMaxSize()
             .padding(32.dp),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
         Text(
             text = "Розмір поля",
             style = MaterialTheme.typography.headlineMedium,
@@ -40,14 +45,6 @@ fun GameSetupScreen(onSelectionComplete: (Int, Int) -> Unit, isDarkTheme: Boolea
                 .padding(bottom = 24.dp),
             textAlign = TextAlign.Center
         )
-        Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-            OutlinedButton(
-                onClick = { onThemeChanged(!isDarkTheme) },
-                modifier = Modifier.padding(horizontal = 8.dp)
-            ) {
-                Text(if (isDarkTheme) "Світла тема" else "Темна тема")
-            }
-        }
         Spacer(modifier = Modifier.height(16.dp))
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
             sizes.forEach { size ->
@@ -90,6 +87,20 @@ fun GameSetupScreen(onSelectionComplete: (Int, Int) -> Unit, isDarkTheme: Boolea
                 modifier = Modifier.padding(horizontal = 8.dp)
             ) {
                 Text("+10 сек")
+            }
+        }
+
+        }
+        Row(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(bottom = 16.dp)
+        ) {
+            OutlinedButton(
+                onClick = { onThemeChanged(!isDarkTheme) },
+                modifier = Modifier.padding(horizontal = 8.dp)
+            ) {
+                Text(if (isDarkTheme) "Світла тема" else "Темна тема")
             }
         }
     }
