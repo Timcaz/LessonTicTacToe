@@ -33,19 +33,22 @@ fun GameSetupScreen(onSelectionComplete: (Int, Int) -> Unit, isDarkTheme: Boolea
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.Center
         ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
         Text(
             text = "Розмір поля",
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 24.dp),
+                .padding(bottom = 16.dp),
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(16.dp))
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
             sizes.forEach { size ->
                 OutlinedButton(
@@ -91,6 +94,7 @@ fun GameSetupScreen(onSelectionComplete: (Int, Int) -> Unit, isDarkTheme: Boolea
         }
 
         }
+      }
         Row(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
